@@ -14,3 +14,20 @@ echo 'Finished cloning'
 
 # Then, add here code to compile and run, and do any post-processing of the
 # tests
+
+if [[ -f ./student-submission/ListExamples.java ]]
+then 
+    cp student-submission/ListExamples.java TestListExamples.java ./lib/* grading-area
+else
+    echo "Wrong file submitted."
+fi
+
+javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" grading-area/*.java 2> /dev/null
+if [[ $? != 0 ]]
+then
+    echo "File did not compile"
+else
+    java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore grading-area/TestListExamples.java > outcome.txt
+    cat outcome.txt
+fi
+
