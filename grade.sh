@@ -23,11 +23,23 @@ else
 fi
 
 javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" grading-area/*.java 2> /dev/null
+
 if [[ $? != 0 ]]
 then
     echo "File did not compile"
+    exit 1
 else
     java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore grading-area/TestListExamples.java > outcome.txt
+fi
+
+result=`grep "FAILURES!!!" outcome.txt`
+expected="FAILURES!!!"
+
+if [[ $result == $expected ]]
+then   
+    echo Your tests give the following Junit error:
     cat outcome.txt
+else
+    echo All tests passed!
 fi
 
