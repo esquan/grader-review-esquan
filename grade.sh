@@ -24,7 +24,7 @@ else
 fi
 
 cd grading-area
-javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" *.java
+javac -cp ".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" *.java 2> /dev/null
 
 if [[ $? != 0 ]]
 then
@@ -34,20 +34,17 @@ else
     java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples > outcome.txt
 fi
 
-result=`grep "FAILURES!!!" outcome.txt`
 expected="FAILURES!!!"
-
 failed=`grep "Tests run:" outcome.txt`
 COUNT_FAIL=${failed:25:1}
 COUNT_TOTAL=${failed:11:1}
-COUNT_GRADE=$(($COUNT_TOTAL-$COUNT_FAIL))
 
-if [[ $result == $expected ]]
+if [[ `grep "FAILURES!!!" outcome.txt` == $expected ]]
 then   
     echo $COUNT_FAIL "test(s) failed"
+    COUNT_GRADE=$(($COUNT_TOTAL-$COUNT_FAIL))
     echo Grade: $COUNT_GRADE/$COUNT_TOTAL
 else
     echo All tests passed!
     echo Grade: 1/1
 fi
-
